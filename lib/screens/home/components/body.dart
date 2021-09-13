@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:shopping/constants.dart';
 import 'package:shopping/models/product.dart';
 import 'package:shopping/screens/home/components/categories.dart';
+import 'package:shopping/screens/home/detail/detail_screen.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({Key? key}) : super(key: key);
@@ -34,7 +36,17 @@ class HomeBody extends StatelessWidget {
                 /* kDefaultPaddin */
                 crossAxisSpacing: MediaQuery.of(context).size.height *
                     0.03 /* kDefaultPaddin) */),
-            itemBuilder: (context, index) => ItemCard(),
+            itemBuilder: (context, index) => ItemCard(
+              product: products[index],
+              press: () =>
+                  // SchedulerBinding.instance?.addPostFrameCallback((_) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DetailScreen(product: products[index]))),
+              // })
+            ),
           ),
         ))
       ],
@@ -43,49 +55,53 @@ class HomeBody extends StatelessWidget {
 }
 
 class ItemCard extends StatelessWidget {
-  final Product? product;
-  final Function? press;
+  final Product product;
+  final Function press;
   const ItemCard({
     Key? key,
-    this.product,
-    this.press,
+    required this.product,
+    required this.press,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: EdgeInsets.all(kDefaultPaddin),
-          // height: 160.0 /* MediaQuery.of(context).size.height * 0.2 */,
-          // width: 140.0 /*  MediaQuery.of(context).size.width * 0.32 */,
-          decoration: BoxDecoration(
-              color: products[0].color,
-              borderRadius: BorderRadius.circular(16.0)),
-          child: Image.asset(
-            products[0].image,
-            fit: BoxFit.contain,
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
-          child: Text(
-            products[0].title,
-            style: TextStyle(
-              color: kTextLightColor,
+    return GestureDetector(
+      onTap: press(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.all(kDefaultPaddin),
+              // height: 160.0 /* MediaQuery.of(context).size.height * 0.2 */,
+              // width: 140.0 /*  MediaQuery.of(context).size.width * 0.32 */,
+              decoration: BoxDecoration(
+                  color: product.color,
+                  borderRadius: BorderRadius.circular(16.0)),
+              child: Image.asset(
+                product.image,
+                fit: BoxFit.fill,
+              ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Text(
-            "\$234",
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
+            child: Text(
+              product.title,
+              style: TextStyle(
+                color: kTextLightColor,
+              ),
+            ),
           ),
-        )
-      ],
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Text(
+              "\$ ${product.price}",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
