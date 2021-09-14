@@ -44,3 +44,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+go/.gitignore
+go/go.sum
+go/hover.yaml
+go/go.mod
+go/cmd/options.go
+go/cmd/main.go
