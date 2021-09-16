@@ -18,18 +18,81 @@ class DetailBody extends StatelessWidget {
               children: [
                 Container(
                   margin: EdgeInsets.only(top: size.height * 0.3),
+                  padding: EdgeInsets.only(
+                      top: size.height * 0.12,
+                      left: kDefaultPaddin,
+                      right: kDefaultPaddin),
                   height: 500,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(24.0),
                           topRight: Radius.circular(24.0))),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Color"),
+                              Row(
+                                children: [
+                                  ColoredDot(
+                                    color: Color(0xff354c95),
+                                    isSelected: true,
+                                  ),
+                                  ColoredDot(
+                                    color: Color(0xfff8c878),
+                                  ),
+                                  ColoredDot(
+                                    color: Color(0xffa29898),
+                                  ),
+                                ],
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
                 ProductTitleWithImage(product: product),
               ],
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+class ColoredDot extends StatelessWidget {
+  final Color color;
+  final bool isSelected;
+  const ColoredDot({
+    Key? key,
+    required this.color,
+    this.isSelected = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin:
+          EdgeInsets.only(top: kDefaultPaddin / 4, right: kDefaultPaddin / 2),
+      padding: EdgeInsets.all(2.5),
+      height: 24.0,
+      width: 24.0,
+      decoration: BoxDecoration(
+        border: Border.all(color: isSelected ? color : Colors.transparent),
+        shape: BoxShape.circle,
+      ),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+        ),
       ),
     );
   }
