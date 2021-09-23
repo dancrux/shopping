@@ -1,6 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shopping/constants.dart';
 import 'package:shopping/models/product.dart';
+
+import 'add_to_cart.dart';
+import 'cart_counter.dart';
+import 'product_title_with_image.dart';
+import 'size_and_dots.dart';
 
 class DetailBody extends StatelessWidget {
   final Product product;
@@ -30,49 +37,13 @@ class DetailBody extends StatelessWidget {
                           topRight: Radius.circular(24.0))),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Color"),
-                                Row(
-                                  children: [
-                                    ColoredDot(
-                                      color: Color(0xff354c95),
-                                      isSelected: true,
-                                    ),
-                                    ColoredDot(
-                                      color: Color(0xfff8c878),
-                                    ),
-                                    ColoredDot(
-                                      color: Color(0xffa29898),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: RichText(
-                              text: TextSpan(
-                                  style: TextStyle(color: kTextColor),
-                                  children: [
-                                    TextSpan(text: "Size\n"),
-                                    TextSpan(
-                                      text: "${product.size} cm",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline5
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold),
-                                    )
-                                  ]),
-                            ),
-                          )
-                        ],
-                      )
+                      SizeAndColoredDot(product: product),
+                      SizedBox(height: kDefaultPaddin / 2),
+                      Description(product: product),
+                      SizedBox(height: kDefaultPaddin / 2),
+                      CounterAndFavBtn(),
+                      SizedBox(height: kDefaultPaddin / 2),
+                      AddToCart(product: product)
                     ],
                   ),
                 ),
@@ -86,39 +57,8 @@ class DetailBody extends StatelessWidget {
   }
 }
 
-class ColoredDot extends StatelessWidget {
-  final Color color;
-  final bool isSelected;
-  const ColoredDot({
-    Key? key,
-    required this.color,
-    this.isSelected = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin:
-          EdgeInsets.only(top: kDefaultPaddin / 4, right: kDefaultPaddin / 2),
-      padding: EdgeInsets.all(2.5),
-      height: 24.0,
-      width: 24.0,
-      decoration: BoxDecoration(
-        border: Border.all(color: isSelected ? color : Colors.transparent),
-        shape: BoxShape.circle,
-      ),
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
-}
-
-class ProductTitleWithImage extends StatelessWidget {
-  const ProductTitleWithImage({
+class Description extends StatelessWidget {
+  const Description({
     Key? key,
     required this.product,
   }) : super(key: key);
@@ -128,49 +68,10 @@ class ProductTitleWithImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Aristocratic Hand Bag",
-            style: TextStyle(color: Colors.white),
-          ),
-          Text(
-            product.title,
-            style: Theme.of(context)
-                .textTheme
-                .headline4
-                ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            height: kDefaultPaddin,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: RichText(
-                    text: TextSpan(children: [
-                  TextSpan(text: "Price\n"),
-                  TextSpan(
-                      text: "\$${product.price}",
-                      style: Theme.of(context).textTheme.headline4?.copyWith(
-                          color: Colors.white, fontWeight: FontWeight.bold))
-                ])),
-              ),
-              SizedBox(
-                width: kDefaultPaddin,
-              ),
-              Expanded(
-                child: Image.asset(
-                  product.image,
-                  fit: BoxFit.fill,
-                ),
-              )
-            ],
-          ),
-        ],
+      padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin),
+      child: Text(
+        product.description,
+        style: TextStyle(height: 1.5),
       ),
     );
   }
